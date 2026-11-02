@@ -1,0 +1,19 @@
+# 构建产物
+build/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+*.dll.a
+
+# 编辑器
+.vscode/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 测试
+test*
