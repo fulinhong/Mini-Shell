@@ -6,23 +6,23 @@
 - 注册命令：`RegisterCommand("hello", hello)` 之后，输入 `hello` 即可执行。
 - 内建命令：`exit`、`help`、`clear`。
 
-## 快速开始
+## 演示
 
 ```c
 #include <stdio.h>
 #include "mini_shell.h"
 
-static void hello(void)
+void Hello(void)
 {
-    puts("hello from mini_shell");
+    puts("Ciallo ~(∠ • ω<)⌒☆");
 }
 
 int main(void)
 {
-    if (RegisterCommand("hello", hello) != 0) {
-        fputs("register failed\n", stderr);
-        return 1;
-    }
-    return MiniShell();
+    if (!RegisterCommand("hello", Hello))
+        puts("注册失败");
+
+    MiniShell();
+    return 0;
 }
 ```
