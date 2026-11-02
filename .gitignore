@@ -16,4 +16,5 @@ build/
 Thumbs.db
 
 # 测试
+lib/
 test*
