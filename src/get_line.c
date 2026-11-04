@@ -1,6 +1,6 @@
 #include "../inc/get_line.h"
 #include <stdlib.h>
-// 从流里读，返回字符串，失败返回nullptr
+
 char *GetLine(FILE *fp)
 {
     size_t capacity = 128;
@@ -15,9 +15,14 @@ char *GetLine(FILE *fp)
     {
         if (cur_char == '\n')
             break;
-        // 不知道为什么测不出CRLF, 所以先不管了
-        // 暂无
-        // ###############################
+
+        if (cur_char == '\r')
+        {
+            int next = fgetc(fp);
+            if (next != EOF && next != '\n')
+                ungetc(next, fp);
+        }
+
         if (char_index + 1 >= capacity)
         {
             size_t new_capacity = 2 * capacity;
