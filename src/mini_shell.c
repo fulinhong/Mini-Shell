@@ -63,8 +63,8 @@ bool MiniShell(void)
 #ifdef _WIN32
     system("chcp 65001 > nul");
 #endif
+    system("clear");
 
-    clear_screen();
     puts("//输入help查看可用命令");
 
     while (1)
