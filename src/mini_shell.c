@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "../inc/mini_shell.h"
 #include "../inc/get_line.h"
@@ -25,7 +26,6 @@ static size_t cmd_count = 0; // 已注册命令数量
 
 static int SearchCommand(char **argv);
 static shell_result_t ShellCommand(char **argv);
-static void clear_screen(void);
 
 bool RegisterCommand(const char *name, cmd_func_t func)
 {
@@ -77,12 +77,12 @@ bool MiniShell(void)
         {
             if (ferror(stdin))
             {
-                puts("\n读取失败");
-                fflush(stdout);
+                fputs("\n读取失败", stderr);
+                fflush(stderr);
                 return false;
             }
 
-            putchar('\n'); // EOF是正常退出
+            putchar('\n');
             return true;
         }
 
@@ -106,7 +106,7 @@ bool MiniShell(void)
         {
         case SHELL_EXIT:
             free(line);
-            return true; // 正常退出true
+            return true;
         case SHELL_HANDLED:
             free(line);
             continue;
@@ -124,8 +124,9 @@ bool MiniShell(void)
 
         if (!is_found)
         {
-            fputs(argv[0], stdout);
-            puts(": 命令不存在");
+            fputs(argv[0], stderr);
+            fputs(": 命令不存在\n", stderr);
+            fflush(stderr);
         }
 
         free(line);
@@ -150,10 +151,17 @@ static int SearchCommand(char **argv)
 
 static shell_result_t ShellCommand(char **argv)
 {
-    if (strcmp(argv[0], "exit") == 0)
+    if (strcmp(argv[0], "clear") == 0)
     {
-        return SHELL_EXIT;
+        if (!isatty(fileno(stdout)))
+        {
+            return SHELL_HANDLED;
+        }
+        fputs("\033[2J\033[H", stdout);
+        fflush(stdout);
+        return SHELL_HANDLED;
     }
+
     if (strcmp(argv[0], "help") == 0)
     {
         puts("##可用命令##");
@@ -170,20 +178,11 @@ static shell_result_t ShellCommand(char **argv)
         fflush(stdout);
         return SHELL_HANDLED;
     }
-    if (strcmp(argv[0], "clear") == 0)
+
+    if (strcmp(argv[0], "exit") == 0)
     {
-        clear_screen();
-        return SHELL_HANDLED;
+        return SHELL_EXIT;
     }
 
     return SHELL_UNKNOWN;
-}
-
-static void clear_screen(void)
-{
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
 }

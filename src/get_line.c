@@ -1,5 +1,7 @@
-#include "../inc/get_line.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+#include "../inc/get_line.h"
 
 char *GetLine(FILE *fp)
 {

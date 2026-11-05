@@ -1,7 +1,7 @@
 // 测试用头文件
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+// #include <string.h>
+// #include <stdlib.h>
+// #include <stdio.h>
 
 #include "../inc/parser_line.h"
 // line已经在mini_shell.c中确保非空
